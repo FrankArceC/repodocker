@@ -1,11 +1,19 @@
-# Usamos la imagen oficial. La etiqueta 'alpine' aquí significa que la imagen oficial
-# ya está construida sobre Alpine, dándote lo mejor de los dos mundos.
-FROM nginx:alpine
+FROM alpine:latest
 
-# Copiamos nuestro contenido estático
-COPY ./html /usr/share/nginx/html
+WORKDIR /app
 
-# (Opcional) Copiamos una configuración personalizada
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Instalamos Python 3 y PIP. 
+# A veces necesitamos 'build-base' si vamos a compilar librerías.
+RUN apk add --no-cache python3 py3-pip
 
-# El puerto 80 ya está expuesto por defecto en la imagen base
+# Es buena práctica crear un entorno virtual, pero para este ejemplo simple:
+COPY requirements.txt .
+# --break-system-packages es necesario en versiones recientes de Python/Alpine
+RUN pip3 install --no-cache-dir -r requirements.txt --break-system-packages
+
+COPY . .
+
+CMD ["python3", "app.py"]
+
+
+
