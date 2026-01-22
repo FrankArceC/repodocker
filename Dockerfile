@@ -1,12 +1,11 @@
-# Imagen oficial ligera
-FROM python:3.9-slim
+# Usamos la imagen oficial. La etiqueta 'alpine' aquí significa que la imagen oficial
+# ya está construida sobre Alpine, dándote lo mejor de los dos mundos.
+FROM nginx:alpine
 
-WORKDIR /app
+# Copiamos nuestro contenido estático
+COPY ./html /usr/share/nginx/html
 
-# Copiamos dependencias e instalamos
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# (Opcional) Copiamos una configuración personalizada
+# COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY . .
-
-CMD ["python", "app.py"]
+# El puerto 80 ya está expuesto por defecto en la imagen base
